@@ -1,3 +1,7 @@
+import sys
+sys.path.append('../doubly_linked_list')
+from doubly_linked_list import (DoublyLinkedList, ListNode)
+
 class LRUCache:
     """
     Our LRUCache class keeps track of the max number of nodes it
@@ -7,7 +11,13 @@ class LRUCache:
     to every node stored in the cache.
     """
     def __init__(self, limit=10):
-        pass
+        # amount of nodes it can hold
+        self.limit = limit
+        # current number of nodes it's holding
+        self.size = 0
+        # setting DoublyLinkedList as the value for self.LinkedList
+        self.LinkedList = DoublyLinkedList()
+        self.hashT = {}
 
     """
     Retrieves the value associated with the given key. Also
@@ -17,7 +27,16 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        pass
+        # if there's no key to retrieve, return None
+        if not self.hashT.get(key):
+            return None
+        else:
+            # node is being created for the key
+            node = self.hashT.get(key)
+            # move the node to the beginning
+            self.LinkedList.move_to_front(node)
+            # get the value and return it
+            return node.value
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -30,4 +49,26 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        pass
+        # check if item already exists
+        node = self.hashT.get(key)
+        # check if node is none then put action
+        if node is not None:
+            node.value = value
+            self.LinkedList.move_to_front(node)
+        else: # if the node doesn't exist yet
+            # if at capacity
+            if self.size == self.limit:
+                # remove from tail
+                self.LinkedList.remove_from_tail()
+                # decrement LRU cache size
+                self.size -= 1
+            
+            # add to the hash table
+            new_node = ListNode(value)
+            self.hashT[key] = new_node
+
+            # add to the beginning of the linked list
+            self.LinkedList.add_to_head(new_node)
+
+            # increment size of list
+            self.size += 1
