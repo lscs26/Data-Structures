@@ -113,7 +113,7 @@ class DoublyLinkedList:
         # If node is in middle
         else:
             node.delete()
-        self.length -=1
+        self.length -= 1
 
     def get_max(self):
         pass
