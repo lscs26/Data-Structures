@@ -202,6 +202,70 @@ class Stack:
 
 # --------------------------------------------------------------------------------------------------
 
+# class BinarySearchTree:
+#     def __init__(self, value):
+#         self.value = value
+#         self.left = None
+#         self.right = None
+
+#     # Insert the given value into the tree
+#     def insert(self, value):
+#         # If inserting we must already have a tree/root
+#         # if value is less than self.value go left, make a new tree/node if empty, otherwise
+#         # keep going (recursion)
+#         # if greater than or equal to then go right, make a new tree/node if empty, otherwise
+#         # keep going.
+#         if value < self.value:
+#             if self.left == None:
+#                 self.left = BinarySearchTree(value)
+#             else:
+#                 self.left.insert(value)
+#         elif value >= self.value:
+#             if self.right == None:
+#                 self.right = BinarySearchTree(value)
+#             else:
+#                 self.right.insert(value)
+
+
+#         # Return True if the tree contains the value
+#         # False if it does not
+#     def contains(self, target):
+#         # if target == self.value, return it
+#         # go left or right based on smaller or bigger
+#         if target == self.value:
+#             return True
+#         elif target < self.value:
+#             if self.value is  not None:
+#                 return self.right.contains(target)
+#             else:
+#                 return False
+#         elif target >= self.value:
+#             if self.right is not None:
+#                 return self.right.contains(target)
+#             else:
+#                 return False
+
+#     # Return the maximum value found in the tree
+#     def get_max(self):
+#         # if right exists, go right
+#         # otherwise return self.value
+#         if self.right is not None:
+#             return self.right.get_max()
+#         else:
+#             return self.value
+
+#     # Call the function `cb` on the value of each node
+#     # You may use a recursive or iterative approach
+#     def for_each(self, cb):
+#         # Recursive
+#         if self.left is not None:
+#             self.left.for_each(cb)
+#         if self.right is not None:
+#             self.right.for_each(cb)
+#         cb(self.value)
+
+#----------------------------- lecture solution --------------------------------------------------------
+
 class BinarySearchTree:
     def __init__(self, value):
         self.value = value
@@ -210,37 +274,39 @@ class BinarySearchTree:
 
     # Insert the given value into the tree
     def insert(self, value):
-        # If inserting we must already have a tree/root
-        # if value is less than self.value go left, make a new tree/node if empty, otherwise
-        # keep going (recursion)
-        # if greater than or equal to then go right, make a new tree/node if empty, otherwise
-        # keep going.
+        #if value < node.value look left
         if value < self.value:
-            if self.left == None:
-                self.left = BinarySearchTree(value)
-            else:
+            # if something is there already
+            if self.left:
+                # recurse left
                 self.left.insert(value)
-        elif value >= self.value:
-            if self.right == None:
-                self.right = BinarySearchTree(value)
+            # if not
             else:
+                self.left = BinarySearchTree(value)
+        # if value is >= node value look right
+        if value >= self.value:
+            # if something is there already
+            if self.right:
+                # recurse right
                 self.right.insert(value)
+            # if not
+            else:
+                # insert right
+                self.right = BinarySearchTree(value)
+        
 
-
-        # Return True if the tree contains the value
-        # False if it does not
     def contains(self, target):
         # if target == self.value, return it
         # go left or right based on smaller or bigger
-        if target == self.value:
+        if self.value == target:
             return True
-        elif target < self.value:
-            if self.value is  not None:
-                return self.right.contains(target)
+        if target < self.value:
+            if self.left:
+                return self.left.contains(target)
             else:
                 return False
-        elif target >= self.value:
-            if self.right is not None:
+        if target >= self.value:
+            if self.right:
                 return self.right.contains(target)
             else:
                 return False
@@ -248,21 +314,27 @@ class BinarySearchTree:
     # Return the maximum value found in the tree
     def get_max(self):
         # if right exists, go right
-        # otherwise return self.value
-        if self.right is not None:
-            return self.right.get_max()
-        else:
+        if not self.right:
+            # otherwise return self.value
             return self.value
+        else:
+            return self.right.get_max()
 
     # Call the function `cb` on the value of each node
     # You may use a recursive or iterative approach
     def for_each(self, cb):
         # Recursive
-        if self.left is not None:
-            self.left.for_each(cb)
-        if self.right is not None:
-            self.right.for_each(cb)
+        # call cb on self.value
         cb(self.value)
+        # if left
+        if self.left:
+            # call for each
+            self.left.for_each(cb)
+        # if right
+        if self.right:
+            # call for each
+            self.right.for_each(cb)
+            
 
 
     # DAY 2 Project -----------------------
@@ -270,7 +342,13 @@ class BinarySearchTree:
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
     def in_order_print(self, node):
-        pass
+        # Check left, if left is None, that's the smallest number
+        if self.left is not None:
+            self.left.in_order_print(node)
+        print(self.value)
+        # Check right
+        if self.right is not None:
+            self.right.in_order_print(node)
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
